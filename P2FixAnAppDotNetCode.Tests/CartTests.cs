@@ -31,7 +31,7 @@ namespace P2FixAnAppDotNetCode.Tests
         public void GetAverageValue()
         {
             ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository();
+            IProductRepository productRepository = ProductRepository.GetInstance();
             IOrderRepository orderRepository = new OrderRepository();
             IProductService productService = new ProductService(productRepository, orderRepository);
 
@@ -48,7 +48,7 @@ namespace P2FixAnAppDotNetCode.Tests
         public void GetTotalValue()
         {
             ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository();
+            IProductRepository productRepository = ProductRepository.GetInstance();
             IOrderRepository orderRepository = new OrderRepository();
             IProductService productService = new ProductService(productRepository, orderRepository);
 

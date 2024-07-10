@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using P2FixAnAppDotNetCode.Models.Repositories;
 
 namespace P2FixAnAppDotNetCode
 {
@@ -7,6 +8,9 @@ namespace P2FixAnAppDotNetCode
     {
         public static void Main(string[] args)
         {
+
+            var productRepository = ProductRepository.Instance;
+
             BuildWebHost(args).Run();
         }
 
