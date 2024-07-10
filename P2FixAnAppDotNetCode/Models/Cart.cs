@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace P2FixAnAppDotNetCode.Models
 {
@@ -11,8 +12,13 @@ namespace P2FixAnAppDotNetCode.Models
         /// <summary>
         /// Read-only property for display only
         /// </summary>
-        public IEnumerable<CartLine> Lines => GetCartLineList();
+        public IEnumerable<CartLine> Lines => _cartLines;
 
+        /// <summary>
+        /// Private list to stock new Lines of the cart since the list Lines is on read only
+        /// </summary>
+        private List<CartLine> _cartLines = new List<CartLine>();
+        
         /// <summary>
         /// Return the actual cartline list
         /// </summary>
@@ -27,7 +33,22 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>//
         public void AddItem(Product product, int quantity)
         {
-            // TODO implement the method
+            //Call of the function  FindProductInCartLines() to search if the porduct is already in the Cart
+            var existingProduct = FindProductInCartLines(product.Id);
+            
+            if (existingProduct == null)    //if the product is not found in the cart it's added
+            {
+                _cartLines.Add(new CartLine
+                {
+                    Product = product,
+                    Quantity = quantity
+                });
+            }
+            else                            //else it adds the quantity chosen
+            {
+                var cartLine = _cartLines.First(cline => cline.Product.Id == product.Id);   //this line use First() of the extension LINQ and search for the first product with the same product Id
+                cartLine.Quantity += quantity;
+            }
         }
 
         /// <summary>
@@ -41,8 +62,10 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public double GetTotalValue()
         {
-            // TODO implement the method
-            return 0.0;
+            //use of the method Sum() of the extension LINQ
+            //do the multiplication of the quantity and the price on each lines of the cart
+            //the add up all the result to return the total
+            return _cartLines.Sum(cl => cl.Product.Price * cl.Quantity);
         }
 
         /// <summary>
@@ -50,8 +73,15 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public double GetAverageValue()
         {
-            // TODO implement the method
-            return 0.0;
+            //do the multiplication of the quantity and the price on each lines of the cart
+            //the add up all the result to return the total
+            //and finally divide the total by the sum of all quantity of each line of the cart
+            if (!_cartLines.Any())
+                return 0.0;
+            else
+            {
+                return _cartLines.Sum(cl => cl.Product.Price * cl.Quantity) / _cartLines.Sum(cl => cl.Quantity);
+            }
         }
 
         /// <summary>
@@ -59,8 +89,18 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public Product FindProductInCartLines(int productId)
         {
-            // TODO implement the method
+            //For each line in the cart, it compares the Id of the product added with the Id of the product in the car,
+            //If the Product is already in the cart the function returns the Id of the product else it return the value null
+
+            foreach (CartLine cartline in Lines)           
+            {
+                if (cartline.Product.Id == productId)
+                {
+                    return cartline.Product;
+                }  
+            }
             return null;
+            
         }
 
         /// <summary>
@@ -76,8 +116,8 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public void Clear()
         {
-            List<CartLine> cartLines = GetCartLineList();
-            cartLines.Clear();
+            //List<CartLine> cartLines = GetCartLineList();
+            _cartLines.Clear();
         }
     }
 
