@@ -9,18 +9,37 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
     /// </summary>
     public class ProductRepository : IProductRepository
     {
+        // Create an unique instance of ProductRepository wich will be instancied on time on the start of the program
+        //(singleton pattern implementation)
+        private static readonly ProductRepository _instance = new ProductRepository();
         private static List<Product> _products;
 
-        public ProductRepository()
+        /// <summary>
+        ///Private constructor to avoid extern instanciation
+        /// </summary>
+        private ProductRepository()
         {
             _products = new List<Product>();
             GenerateProductData();
         }
 
         /// <summary>
+        /// Public property to access to the unique instance
+        /// </summary>
+        public static ProductRepository Instance
+        {
+            get { return _instance; }
+        }
+
+        public static ProductRepository GetInstance()
+        {
+            return _instance;
+        }
+
+        /// <summary>
         /// Generate the default list of products
         /// </summary>
-        private void GenerateProductData()
+        public void GenerateProductData()
         {
             int id = 0;
             _products.Add(new Product(++id, 10, 92.50, "Echo Dot", "(2nd Generation) - Black"));
@@ -66,6 +85,16 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
                 }
             }
             return null;
+        }
+
+        public void AddProduct(Product product)
+        {
+            _products.Add(product);
+        }
+
+        public void ClearProducts()
+        {
+            _products.Clear();
         }
     }
 }

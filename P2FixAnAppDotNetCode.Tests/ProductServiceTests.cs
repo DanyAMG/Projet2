@@ -12,35 +12,44 @@ namespace P2FixAnAppDotNetCode.Tests
     /// </summary>
     public class ProductServiceTests
     {
+        private readonly IProductService _productService;
+        private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
 
         [Fact]
         public void Product()
         {
-            IProductRepository productRepository = new ProductRepository();
+            IProductRepository productRepository = ProductRepository.GetInstance();
             IOrderRepository orderRepository = new OrderRepository();
             IProductService productService = new ProductService(productRepository, orderRepository);
 
             var products = productService.GetAllProducts();
 
-            //Assert.IsType<List<Product>>(products);
+           
             Assert.IsType<List<Product>>(products);
 
+        }
+        public ProductServiceTests()
+        {
+            _productRepository = ProductRepository.Instance; 
+            _orderRepository = new OrderRepository();
+            _productService = new ProductService(_productRepository, _orderRepository);
         }
 
         [Fact]
         public void UpdateProductQuantities()
         {
-            Cart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository();
-            IOrderRepository orderRepository = new OrderRepository();
-            IProductService productService = new ProductService(productRepository, orderRepository);
+            _productRepository.ClearProducts();
+            _productRepository.GenerateProductData();
 
-            IEnumerable<Product> products = productService.GetAllProducts();
+            Cart cart = new Cart();
+
+            IEnumerable<Product> products = _productService.GetAllProducts();
             cart.AddItem(products.Where(p => p.Id == 1).First(), 1);
             cart.AddItem(products.Where(p => p.Id == 3).First(), 2);
             cart.AddItem(products.Where(p => p.Id == 5).First(), 3);
 
-            productService.UpdateProductQuantities(cart);
+            _productService.UpdateProductQuantities(cart);
 
             Assert.Equal(9, products.Where(p => p.Id == 1).First().Stock);
             Assert.Equal(28, products.Where(p => p.Id == 3).First().Stock);
@@ -50,13 +59,11 @@ namespace P2FixAnAppDotNetCode.Tests
             //will simulate the process from the front end perspective
             //here testing that product stock values are decreasing for each cart checkout, not just a single time
             cart = new Cart();
-            productRepository = new ProductRepository();
-            productService = new ProductService(productRepository, orderRepository);
-            products = productService.GetAllProducts();
+            products = _productService.GetAllProducts();
             cart.AddItem(products.Where(p => p.Id == 1).First(), 1);
             cart.AddItem(products.Where(p => p.Id == 3).First(), 2);
             cart.AddItem(products.Where(p => p.Id == 5).First(), 3);
-            productService.UpdateProductQuantities(cart);
+            _productService.UpdateProductQuantities(cart);
             Assert.Equal(8, products.Where(p => p.Id == 1).First().Stock);
             Assert.Equal(26, products.Where(p => p.Id == 3).First().Stock);
             Assert.Equal(44, products.Where(p => p.Id == 5).First().Stock);
@@ -65,7 +72,7 @@ namespace P2FixAnAppDotNetCode.Tests
         [Fact]
         public void GetProductById()
         {
-            IProductRepository productRepository = new ProductRepository();
+            IProductRepository productRepository = ProductRepository.GetInstance();
             IOrderRepository orderRepository = new OrderRepository();
             IProductService productService = new ProductService(productRepository, orderRepository);
             int id = 3;
