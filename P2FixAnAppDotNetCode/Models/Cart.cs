@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -33,21 +34,38 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>//
         public void AddItem(Product product, int quantity)
         {
-            //Call of the function  FindProductInCartLines() to search if the porduct is already in the Cart
+            var availableStock = product.Stock;
+
+            //Call of the function  FindProductInCartLines() to search if the product is already in the Cart
             var existingProduct = FindProductInCartLines(product.Id);
-            
-            if (existingProduct == null)    //if the product is not found in the cart it's added
-            {
-                _cartLines.Add(new CartLine
+            //this line use First() of the extension LINQ and search for the first product with the same product Id
+
+                if (existingProduct == null)    //if the product is not found in the cart it's added
                 {
-                    Product = product,
-                    Quantity = quantity
-                });
+                    if (quantity <= availableStock)
+                    {
+                        _cartLines.Add(new CartLine
+                        {
+                            Product = product,
+                            Quantity = quantity
+                        });
+                    }
+                else
+                {
+                    throw new Exception("StockInsufficientError");
+                }
             }
-            else                            //else it adds the quantity chosen
-            {
-                var cartLine = _cartLines.First(cline => cline.Product.Id == product.Id);   //this line use First() of the extension LINQ and search for the first product with the same product Id
-                cartLine.Quantity += quantity;
+                else                            //else it adds the quantity chosen
+                {
+                    var cartLine = _cartLines.First(cline => cline.Product.Id == existingProduct.Id);
+                    if ((cartLine.Quantity + quantity) <= availableStock)
+                    {
+                        cartLine.Quantity += quantity;
+                    }
+                else
+                {
+                    throw new Exception("StockInsufficientError");
+                }
             }
         }
 
