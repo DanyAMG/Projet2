@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Localization;
 using P2FixAnAppDotNetCode.Models;
 using P2FixAnAppDotNetCode.Models.Services;
 
@@ -9,11 +12,13 @@ namespace P2FixAnAppDotNetCode.Controllers
     {
         private readonly ICart _cart;
         private readonly IProductService _productService;
+        private readonly IStringLocalizer<CartController> _localizer;
 
-        public CartController(ICart pCart, IProductService productService)
+        public CartController(ICart pCart, IProductService productService, IStringLocalizer<CartController> localizer)
         {
             _cart = pCart;
             _productService = productService;
+            _localizer = localizer;
         }
 
         public ViewResult Index()
@@ -24,16 +29,25 @@ namespace P2FixAnAppDotNetCode.Controllers
         [HttpPost]
         public RedirectToActionResult AddToCart(int id)
         {
-            Product product = _productService.GetProductById(id);
 
-            if (product != null)
+            try
             {
-                _cart.AddItem(product, 1);
-                return RedirectToAction("Index");
+                Product product = _productService.GetProductById(id);
+
+                if (product != null)
+                {
+                    _cart.AddItem(product, 1);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Product");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Index", "Product");
+                //TempData["StockInsufficientError"] = _localizer["StockInsufficientError"];
+                return RedirectToAction("Index");
             }
         }
 

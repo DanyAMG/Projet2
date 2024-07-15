@@ -1,6 +1,14 @@
 ﻿@model P2FixAnAppDotNetCode.Models.Cart
 
 <h2>@Localizer["YourCart"]</h2>
+
+@if (TempData["StockInsufficientError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["StockInsufficientError"]
+    </div>
+}
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -51,3 +59,4 @@
     <a class="btn btn-primary" asp-action="Index" asp-controller="Product">@Localizer["ContinueShopping"]</a>
     <a class="btn btn-primary" asp-action="Index" asp-controller="Order">@Localizer["Checkout"]</a>
 </div>
+
