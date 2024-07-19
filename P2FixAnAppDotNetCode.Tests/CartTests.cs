@@ -16,8 +16,8 @@ namespace P2FixAnAppDotNetCode.Tests
         public void AddItemInCart()
         {
             Cart cart = new Cart();
-            Product product1 = new Product(1, 0, 20, "name", "description");
-            Product product2 = new Product(1, 0, 20, "name", "description");
+            Product product1 = new Product(1, 10, 20, "name", "description");
+            Product product2 = new Product(1, 10, 20, "name", "description");
 
             cart.AddItem(product1, 1);
             cart.AddItem(product2, 1);
@@ -66,7 +66,7 @@ namespace P2FixAnAppDotNetCode.Tests
         public void FindProductInCartLines()
         {
             Cart cart = new Cart();
-            Product product = new Product(999, 0, 20, "name", "description");
+            Product product = new Product(999, 10, 20, "name", "description");
 
             cart.AddItem(product, 1);
             Product result = cart.FindProductInCartLines(999);

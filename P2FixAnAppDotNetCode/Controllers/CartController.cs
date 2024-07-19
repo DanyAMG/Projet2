@@ -46,15 +46,15 @@ namespace P2FixAnAppDotNetCode.Controllers
             }
             catch (Exception ex)
             {
-                //TempData["StockInsufficientError"] = _localizer["StockInsufficientError"];
+                
+                TempData["StockInsufficientError"] = "Stock Insufficient";
                 return RedirectToAction("Index");
             }
         }
 
         public RedirectToActionResult RemoveFromCart(int id)
         {
-            Product product = _productService.GetAllProducts()
-                .FirstOrDefault(p => p.Id == id);
+            Product product = _productService.GetAllProducts().FirstOrDefault(p => p.Id == id);
 
             if (product != null)
             {

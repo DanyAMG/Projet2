@@ -50,11 +50,11 @@ namespace P2FixAnAppDotNetCode.Models
                             Quantity = quantity
                         });
                     }
-                else
-                {
-                    throw new Exception("StockInsufficientError");
+                    else
+                    {
+                        throw new Exception("StockInsufficientError");
+                    }
                 }
-            }
                 else                            //else it adds the quantity chosen
                 {
                     var cartLine = _cartLines.First(cline => cline.Product.Id == existingProduct.Id);
@@ -62,18 +62,21 @@ namespace P2FixAnAppDotNetCode.Models
                     {
                         cartLine.Quantity += quantity;
                     }
-                else
-                {
-                    throw new Exception("StockInsufficientError");
-                }
+                    else
+                    {
+                        throw new Exception("StockInsufficientError");
+                    }
             }
         }
 
         /// <summary>
         /// Removes a product form the cart
         /// </summary>
-        public void RemoveLine(Product product) =>
-            GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);
+        public void RemoveLine(Product product)
+        {
+            _cartLines.RemoveAll(l => l.Product.Id == product.Id);
+        }
+            
 
         /// <summary>
         /// Get total value of a cart

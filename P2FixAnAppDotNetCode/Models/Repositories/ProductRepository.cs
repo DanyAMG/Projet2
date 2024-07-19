@@ -42,7 +42,7 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
         public void GenerateProductData()
         {
             int id = 0;
-            _products.Add(new Product(++id, 2, 92.50, "Echo Dot", "(2nd Generation) - Black"));
+            _products.Add(new Product(++id, 10, 92.50, "Echo Dot", "(2nd Generation) - Black"));
             _products.Add(new Product(++id, 20, 9.99, "Anker 3ft / 0.9m Nylon Braided", "Tangle-Free Micro USB Cable"));
             _products.Add(new Product(++id, 30, 69.99, "JVC HAFX8R Headphone", "Riptidz, In-Ear"));
             _products.Add(new Product(++id, 40, 32.50, "VTech CS6114 DECT 6.0", "Cordless Phone"));
