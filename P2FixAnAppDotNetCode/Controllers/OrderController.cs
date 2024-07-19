@@ -24,6 +24,7 @@ namespace P2FixAnAppDotNetCode.Controllers
         [HttpPost]
         public IActionResult Index(Order order)
         {
+            
             if (!((Cart) _cart).Lines.Any())
             {
                 ModelState.AddModelError("", _localizer["CartEmpty"]);
