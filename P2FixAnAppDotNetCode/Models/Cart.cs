@@ -137,7 +137,6 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public void Clear()
         {
-            //List<CartLine> cartLines = GetCartLineList();
             _cartLines.Clear();
         }
     }
